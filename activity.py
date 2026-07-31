@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Génère des commits d'activité sur ce dépôt."""
 
 from __future__ import annotations
 
