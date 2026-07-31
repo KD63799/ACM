@@ -1,0 +1,25 @@
+name: activity
+
+on:
+  schedule:
+    - cron: "17 7 * * *"
+    - cron: "42 12 * * *"
+    - cron: "8 19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python activity.py --min 1 --max 2 --skip-chance 0.2
+        env:
+          COMMIT_EMAIL: ${{ secrets.COMMIT_EMAIL }}
+          COMMIT_NAME: ${{ secrets.COMMIT_NAME }}
+      - run: git push
