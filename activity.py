@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Génère des commits d'activité sur ce dépôt."""
 
 from __future__ import annotations
 
@@ -15,7 +16,11 @@ LOG = Path(__file__).parent / "activity.json"
 
 
 def run(*args: str) -> None:
-    subprocess.run(args, check=True, capture_output=True, text=True)
+    try:
+        subprocess.run(args, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as exc:
+        print(exc.stderr.strip(), file=sys.stderr)
+        raise
 
 
 def append_entry() -> int:
@@ -54,7 +59,7 @@ def main() -> int:
         return 0
 
     run("git", "config", "user.email", email)
-    run("git", "config", "user.name", os.environ.get("COMMIT_NAME", "KD6-3.7"))
+    run("git", "config", "user.name", os.environ.get("COMMIT_NAME") or "KD6-3.7")
 
     for _ in range(random.randint(args.min, args.max)):
         make_commit()
